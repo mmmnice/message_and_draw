@@ -15,6 +15,7 @@ import CanvasDraw from 'react-canvas-draw';
 //config
 firebase.initializeApp(
   // config
+  config
 )
 const auth = firebase.auth();
 const firestore = firebase.firestore();
