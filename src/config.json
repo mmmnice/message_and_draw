@@ -1,1 +1,9 @@
-))))
+{
+    "apiKey": "AIzaSyBwVwpbvDxFyrmdk0X1oaDRN77Twj2D_4A",
+    "authDomain": "messaging-and-drawing.firebaseapp.com",
+    "projectId": "messaging-and-drawing",
+    "storageBucket": "messaging-and-drawing.appspot.com",
+    "messagingSenderId": "178270662538",
+    "appId": "1:178270662538:web:f9a973355704f3ce002273",
+    "measurementId": "G-FWJEEQV1PM"
+}
