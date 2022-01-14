@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import ErrorBoundary from './errorcheck.js'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
@@ -13,6 +14,7 @@ import CanvasDraw from 'react-canvas-draw';
 //config
 firebase.initializeApp({
   //Config
+
 })
 
 const auth = firebase.auth();
@@ -63,8 +65,10 @@ function DrawCanvas() {
   return (
     <div>
       <form onSubmit={send_message}>
-        <CanvasDraw ref={canvasDraw => can = canvasDraw} style={{
-          boxShadow: "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)"
+        <CanvasDraw 
+          style={{
+          boxShadow: "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)",
+
         }} onChange={(e) => {
           set_drawing_string(e.getSaveData());
         }} />
@@ -127,27 +131,50 @@ function ChatRoom() {
   </>)
 }
 
+// function DrawingSomething(data, canvas){
+//   console.log(' in drawin', data, canvas);
+//   return <div>
+//     <p>
+//       {/* {canvas.loadSaveData(data.msg)} */}
+//       hi
+//       </p></div>
+// }
+
 //why does htis get called twoit
 function ChatMessage(props) {
   console.log(props);
+  const vice = '20000px';
   const message_properties = props.options;
   const message = message_properties.id === auth.currentUser.uid ? 'sent' : 'received';
   //If it 
   if (message_properties.image) {
     return <div>
-      <p>
         {message_properties.user}
-        <CanvasDraw disabled hideGrid ref={canvasDraw => {
+        <ErrorBoundary>
+        <CanvasDraw 
+        propTypes = {{
+          canvasWidth: '10px',
+          canvasHeight: '10px'
+        }}
+        canvasWidth = {200}
+        canvasHeight = {200}
+        style = {{
+          // width: '150px',
+          // height: '150px'
+        }} disabled hideGrid ref={canvasDraw => {
+          if (!canvasDraw) {
+            return null;
+          }
           if (message_properties.msg) {
 
             //Canvasdraw loses its reference, find a way to avoid making nested ifs: https://reactjs.org/docs/refs-and-the-dom.html#refs-and-functional-components
-            if (canvasDraw == null) {
-              return null;
-            }
+           
+            console.log(canvasDraw);
+            // canvasDraw.setCanvasSize(canvasDraw ? canvasDraw : null, 50,50);
             canvasDraw.loadSaveData(message_properties.msg);
           }
         }} />
-      </p>
+        </ErrorBoundary>
 
     </div>;
   }
