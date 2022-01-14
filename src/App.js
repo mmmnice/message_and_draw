@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import ErrorBoundary from './errorcheck.js'
 import firebase from 'firebase/compat/app';
+import config from './config.json';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 
@@ -12,11 +13,9 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import CanvasDraw from 'react-canvas-draw';
 
 //config
-firebase.initializeApp({
-  //Config
-
-})
-
+firebase.initializeApp(
+  // config
+)
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 // const hey = React.createRef();
