@@ -14,14 +14,20 @@ body{
     color: #fff;   
 
     header {
-        position: fixed;
-        display: inline-block;
+        width:200px;
+        margin:auto;
     }
 
     .messages-wrapper {
-        display: inline-block;
+        // display: inline-block;
+        margin:auto;
+        width: 400px;
         padding-top: 29px;
-
+        .messages{
+            margin-bottom: 120px;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .message{
             display:flex;
             align-items:center;
@@ -35,6 +41,9 @@ body{
             .content {
                 padding: 0 12px;
                 text-align: left;
+                .message-content{
+                    // width: 40% !important;
+                }
             }
 
         }
@@ -45,7 +54,13 @@ body{
         bottom: -2px;
         background: #37393e;
         z-index: 1000;
-        height: 120px;
+        height: 100px;
+        .draw-canvas{
+            position:fixed;
+            bottom:0;
+            left:0;
+            padding-left: 40px
+        }
     }
 
 }
