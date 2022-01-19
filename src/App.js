@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import './App.scss';
 import ErrorBoundary from './errorcheck.js'
 import firebase from 'firebase/compat/app';
 import config from './config.json';
@@ -19,8 +19,6 @@ firebase.initializeApp(
 )
 const auth = firebase.auth();
 const firestore = firebase.firestore();
-// const hey = React.createRef();
-// console.log(hey);
 
 
 function App() {
@@ -28,11 +26,11 @@ function App() {
   return (
     <div className="App">
       <header>
-        hey <SignOut />
+        <SignOut />
       </header>
-      <section>
+      <section className='messages-wrapper'>
         {user ? <ChatRoom /> : <SignIn />}
-        <DrawCanvas />
+        {/* <DrawCanvas /> */}
       </section>
     </div>
   );
@@ -40,7 +38,6 @@ function App() {
 
 function DrawCanvas() {
   //canvas referen
-  let can = null;
   const [drawing_value, set_drawing_string] = useState('');
 
   const messagesRef = firestore.collection('messages');
@@ -53,25 +50,23 @@ function DrawCanvas() {
     await messagesRef.add({
       msg: drawing_value,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      id: user_info.uid,
+      profile_id: user_info.uid,
       image: true,
-      user: user_info.displayName
+      user: user_info.displayName,
+      profile_image: user_info.photoURL
 
-      //PHOTOURL for later
     });
-    console.log(can);
-    can.clear();
   }
   return (
-    <div>
+    <div className={'draw-canvas'}>
       <form onSubmit={send_message}>
-        <CanvasDraw 
+        <CanvasDraw
           style={{
-          boxShadow: "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)",
+            boxShadow: "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)",
 
-        }} onChange={(e) => {
-          set_drawing_string(e.getSaveData());
-        }} />
+          }} onChange={(e) => {
+            set_drawing_string(e.getSaveData());
+          }} />
 
         <button type='submit'> Send it</button>
       </form>
@@ -100,9 +95,13 @@ function ChatRoom() {
   const messagesRef = firestore.collection('messages');
   const query = messagesRef.orderBy('createdAt').limit(25);
   const [messages] = useCollectionData(query, { idField: 'id' });
-
   const [formValue, setFormValue] = useState('');
+  const [needCanvas, setCanvas] = useState(false);
 
+
+  const toggle_canvas = () => {
+    needCanvas ? setCanvas(false) : setCanvas(true);
+  }
   const send_message = async (e) => {
     //no refresh
     e.preventDefault();
@@ -111,76 +110,94 @@ function ChatRoom() {
     await messagesRef.add({
       msg: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      id: user_info.uid,
+      profile_id: user_info.uid,
       image: false,
-      user: user_info.displayName
+      user: user_info.displayName,
+      profile_image: user_info.photoURL
       //PHOTOURL for later
     });
 
     setFormValue('');
   }
   return (<>
-    <div>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} options={msg} />)}
-      <form onSubmit={send_message}>
-        write something
-        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} />
-        <button type='Submit'> Send  </button>
-      </form>
+    <div className='content'>
+      <div className='messages'>
+        {messages && messages.map(msg => <ChatMessage key={msg.id} options={msg} />)}
+      </div>
+
+      <div className='form-input'>
+        <form onSubmit={send_message}>
+          <input value={formValue} placeholder='Write something' onChange={(e) => setFormValue(e.target.value)} />
+          <button type='button' onClick={toggle_canvas}> fortnite draw </button>
+          <button type='Submit'> Send  </button>
+
+        </form>
+        {needCanvas ? <DrawCanvas /> : null}
+
+      </div>
+
+
     </div>
   </>)
 }
 
-// function DrawingSomething(data, canvas){
-//   console.log(' in drawin', data, canvas);
-//   return <div>
-//     <p>
-//       {/* {canvas.loadSaveData(data.msg)} */}
-//       hi
-//       </p></div>
-// }
 
 //why does htis get called twoit
 function ChatMessage(props) {
-  console.log(props);
-  const vice = '20000px';
   const message_properties = props.options;
-  const message = message_properties.id === auth.currentUser.uid ? 'sent' : 'received';
+
+  const message = message_properties.profile_id === auth.currentUser.uid ? 'sent' : 'received';
   //If it 
   if (message_properties.image) {
-    return <div>
-        {message_properties.user}
-        <ErrorBoundary>
-        <CanvasDraw 
-        propTypes = {{
-          canvasWidth: '10px',
-          canvasHeight: '10px'
-        }}
-        canvasWidth = {200}
-        canvasHeight = {200}
-        style = {{
-          // width: '150px',
-          // height: '150px'
-        }} disabled hideGrid ref={canvasDraw => {
-          if (!canvasDraw) {
-            return null;
-          }
-          if (message_properties.msg) {
+    return <div className={`message ${message}`} >
+          <img src = {message_properties.profile_image} alt= 'profile' className= 'prof' />
 
-            //Canvasdraw loses its reference, find a way to avoid making nested ifs: https://reactjs.org/docs/refs-and-the-dom.html#refs-and-functional-components
-           
-            console.log(canvasDraw);
-            // canvasDraw.setCanvasSize(canvasDraw ? canvasDraw : null, 50,50);
-            canvasDraw.loadSaveData(message_properties.msg);
-          }
-        }} />
-        </ErrorBoundary>
+      <div className='content'>
+        <div className='name'>
+          {message_properties.user}
+
+        </div>
+        <div className='message-content'>
+          <ErrorBoundary>
+            <CanvasDraw
+              propTypes={{
+                canvasWidth: '10px',
+                canvasHeight: '10px'
+              }}
+              canvasWidth={200}
+              canvasHeight={200}
+              style={{
+                width: '150px',
+                height: '150px'
+              }}
+              disabled hideGrid ref={canvasDraw => {
+                if (!canvasDraw) {
+                  return null;
+                }
+                if (message_properties.msg) {
+                  canvasDraw.loadSaveData(message_properties.msg);
+                }
+              }} />
+          </ErrorBoundary>
+        </div>
+
+
+      </div>
 
     </div>;
   }
-  console.log(message_properties.user);
-  return <div className={`${message}`}>
-    <p>{message_properties.user}: {message_properties.msg}</p>
+  
+  console.log(message_properties.profile_image);
+  return <div className={`message ${message}`}>
+    <img src = {message_properties.profile_image} alt= 'profile' className= 'prof' />
+    <div className = 'content'>
+      <div className = 'name'>
+        {message_properties.user}
+      </div>
+      <div className = 'message-content'>
+        {message_properties.msg}
+      </div>
+    </div>
   </div>
 }
 
