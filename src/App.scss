@@ -1,36 +1,39 @@
-body{
+body {
     margin: 0;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: #37393e;
 }
+
 .App {
     text-align: center;
     // max-width: 728px;
     margin: 0 auto;
     // margin-left: 200px;
     font-size: 24px;
-    color: #fff;   
+    color: #fff;
 
     header {
-        width:200px;
-        margin:auto;
+        width: 200px;
+        margin: auto;
     }
 
     .messages-wrapper {
         // display: inline-block;
-        margin:auto;
-        width: 400px;
+        margin: auto;
+        width: 500px;
         padding-top: 29px;
-        .messages{
+
+        .messages {
             margin-bottom: 120px;
             margin-left: auto;
             margin-right: auto;
         }
-        .message{
-            display:flex;
-            align-items:center;
+
+        .message {
+            display: flex;
+            align-items: center;
             padding: 10px 0;
 
             .prof {
@@ -38,10 +41,12 @@ body{
                 width: 40px;
                 height: auto;
             }
+
             .content {
                 padding: 0 12px;
                 text-align: left;
-                .message-content{
+
+                .message-content {
                     // width: 40% !important;
                 }
             }
@@ -55,11 +60,55 @@ body{
         background: #37393e;
         z-index: 1000;
         height: 100px;
-        .draw-canvas{
-            position:fixed;
-            bottom:0;
-            left:0;
-            padding-left: 40px
+        margin: auto;
+        width: 400px;
+
+        .draw-canvas {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding-left: 40px;
+
+            &.hide{
+                display:none;
+            }
+        }
+
+        input {
+            // width: 100%;
+            height: 50px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background: #40444b;
+            color: #fff;
+        }
+
+        .text-button {
+            // width: 100 px;
+            // height: 50 px;
+            background-color: #005a9b;
+            color: #fff;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 8px 0 8px 10px;
+        }
+
+        .draw-toggle {
+            // width: 100 px;
+            // height: 50px;
+            background-color: #d8a20e;
+            color: #fff;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 8px 0 8px 10px;
         }
     }
 

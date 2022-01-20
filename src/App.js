@@ -20,6 +20,20 @@ firebase.initializeApp(
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
+let app_refs = {
+  'canvasRef': React.createRef(),
+  'newDiv': React.createRef()
+
+}
+//canvas
+//test
+function toggle_class(result){
+
+  // !result ? app_refs.newDiv.current.classList.remove('hide') : app_refs.newDiv.current.classList.add('hide');;
+
+
+  return;
+}
 
 function App() {
   const [user] = useAuthState(auth);
@@ -46,7 +60,6 @@ function DrawCanvas() {
     e.preventDefault();
 
     const user_info = auth.currentUser;
-    console.log(user_info);
     await messagesRef.add({
       msg: drawing_value,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -54,13 +67,15 @@ function DrawCanvas() {
       image: true,
       user: user_info.displayName,
       profile_image: user_info.photoURL
-
     });
+    app_refs.canvasRef.current.clear();
   }
   return (
-    <div className={'draw-canvas'}>
+    // {classname previously draw-canvas hide, find better way to open and close the canvas}
+    <div className={'draw-canvas'} ref = {app_refs.newDiv}>
       <form onSubmit={send_message}>
-        <CanvasDraw
+        <CanvasDraw ref = {app_refs.canvasRef}
+          className = 'canvascanvascanvas'
           style={{
             boxShadow: "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)",
 
@@ -101,6 +116,7 @@ function ChatRoom() {
 
   const toggle_canvas = () => {
     needCanvas ? setCanvas(false) : setCanvas(true);
+    // toggle_class(needCanvas);
   }
   const send_message = async (e) => {
     //no refresh
@@ -128,11 +144,13 @@ function ChatRoom() {
       <div className='form-input'>
         <form onSubmit={send_message}>
           <input value={formValue} placeholder='Write something' onChange={(e) => setFormValue(e.target.value)} />
-          <button type='button' onClick={toggle_canvas}> fortnite draw </button>
-          <button type='Submit'> Send  </button>
+          <button type='button' className = 'draw-toggle' onClick={toggle_canvas}> fortnite draw </button>
+          <button type='Submit' className = 'text-button'> Send  </button>
 
         </form>
-        {needCanvas ? <DrawCanvas /> : null}
+        
+        {needCanvas ?  <DrawCanvas/>: null}
+        {/* {console.log(app_refs.newDiv.current.addClass('hey'))} */}
 
       </div>
 
@@ -187,7 +205,6 @@ function ChatMessage(props) {
     </div>;
   }
   
-  console.log(message_properties.profile_image);
   return <div className={`message ${message}`}>
     <img src = {message_properties.profile_image} alt= 'profile' className= 'prof' />
     <div className = 'content'>
