@@ -182,6 +182,7 @@ function ChatMessage(props) {
                 canvasWidth: '10px',
                 canvasHeight: '10px'
               }}
+              className = 'canvas-result'
               canvasWidth={200}
               canvasHeight={200}
               style={{
@@ -204,8 +205,8 @@ function ChatMessage(props) {
 
     </div>;
   }
-  
-  return <div className={`message ${message}`}>
+
+return <div className={`message ${message}`}>
     <img src = {message_properties.profile_image} alt= 'profile' className= 'prof' />
     <div className = 'content'>
       <div className = 'name'>
