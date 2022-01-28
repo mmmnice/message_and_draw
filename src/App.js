@@ -9,31 +9,22 @@ import 'firebase/compat/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-
 import CanvasDraw from 'react-canvas-draw';
 
 //config
 firebase.initializeApp(
-  // config
   config
 )
+
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
 let app_refs = {
   'canvasRef': React.createRef(),
-  'newDiv': React.createRef()
-
+  'newDiv': React.createRef(),
+  'canvasInput': React.createRef()
 }
 //canvas
-//test
-function toggle_class(result){
-
-  // !result ? app_refs.newDiv.current.classList.remove('hide') : app_refs.newDiv.current.classList.add('hide');;
-
-
-  return;
-}
 
 function App() {
   const [user] = useAuthState(auth);
