@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import './App.scss';
 import ErrorBoundary from './errorcheck.js'
 import firebase from 'firebase/compat/app';
@@ -24,7 +24,8 @@ let app_refs = {
   'newDiv': React.createRef(),
   'canvasInput': React.createRef()
 }
-//canvas
+//canvas ref
+const context = createContext(false);
 
 function App() {
   const [user] = useAuthState(auth);
@@ -35,7 +36,6 @@ function App() {
       </header>
       <section className='messages-wrapper'>
         {user ? <ChatRoom /> : <SignIn />}
-        {/* <DrawCanvas /> */}
       </section>
     </div>
   );
@@ -60,6 +60,7 @@ function DrawCanvas() {
       profile_image: user_info.photoURL
     });
     app_refs.canvasRef.current.clear();
+    context._currentValue = false;
   }
   return (
     // {classname previously draw-canvas hide, find better way to open and close the canvas}
@@ -74,7 +75,7 @@ function DrawCanvas() {
             set_drawing_string(e.getSaveData());
           }} />
 
-        <button type='submit'> Send it</button>
+        <button type='submit'> Send </button>
       </form>
 
     </div>
@@ -107,7 +108,7 @@ function ChatRoom() {
 
   const toggle_canvas = () => {
     needCanvas ? setCanvas(false) : setCanvas(true);
-    // toggle_class(needCanvas);
+    context._currentValue ? context._currentValue = false : context._currentValue = true;
   }
   const send_message = async (e) => {
     //no refresh
@@ -121,7 +122,6 @@ function ChatRoom() {
       image: false,
       user: user_info.displayName,
       profile_image: user_info.photoURL
-      //PHOTOURL for later
     });
 
     setFormValue('');
@@ -135,13 +135,12 @@ function ChatRoom() {
       <div className='form-input'>
         <form onSubmit={send_message}>
           <input value={formValue} placeholder='Write something' onChange={(e) => setFormValue(e.target.value)} />
-          <button type='button' className = 'draw-toggle' onClick={toggle_canvas}> fortnite draw </button>
+          <button type='button' className = 'draw-toggle' onClick={toggle_canvas}> Draw </button>
           <button type='Submit' className = 'text-button'> Send  </button>
 
         </form>
         
-        {needCanvas ?  <DrawCanvas/>: null}
-        {/* {console.log(app_refs.newDiv.current.addClass('hey'))} */}
+        {context._currentValue ?  <DrawCanvas/>: null}
 
       </div>
 
