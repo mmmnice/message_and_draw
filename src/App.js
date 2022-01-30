@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useRef } from 'react';
 import './App.scss';
 import ErrorBoundary from './errorcheck.js'
 import firebase from 'firebase/compat/app';
@@ -99,6 +99,7 @@ function SignOut() {
   )
 }
 function ChatRoom() {
+  const hold = useRef();
   const messagesRef = firestore.collection('messages');
   const query = messagesRef.orderBy('createdAt').limit(25);
   const [messages] = useCollectionData(query, { idField: 'id' });
@@ -125,11 +126,13 @@ function ChatRoom() {
     });
 
     setFormValue('');
+    hold.current.scrollIntoView({behavior: 'smooth'});
   }
   return (<>
     <div className='content'>
       <div className='messages'>
         {messages && messages.map(msg => <ChatMessage key={msg.id} options={msg} />)}
+        <span ref = {hold}/>
       </div>
 
       <div className='form-input'>
